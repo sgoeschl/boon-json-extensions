@@ -54,8 +54,7 @@ public class ModifyingJsonPrettyPrinter
         }
 
         @Override
-        public CharBuf prettyPrintMap(Map map)
-        {
+        public CharBuf prettyPrintMap(Map map) {
             return this.prettyPrintMap(map, 0);
         }
 
@@ -84,8 +83,7 @@ public class ModifyingJsonPrettyPrinter
         }
     }
 
-    private static class AcceptKeyPredicate implements Predicate<String>
-    {
+    private static class AcceptKeyPredicate implements Predicate<String> {
 
         private final Set<String> skippedKeys;
 
