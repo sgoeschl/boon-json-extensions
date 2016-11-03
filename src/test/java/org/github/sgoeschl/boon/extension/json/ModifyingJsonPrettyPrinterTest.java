@@ -76,8 +76,13 @@ public class ModifyingJsonPrettyPrinterTest {
     );
 
     @Test
-    public void shouldPrintPrettyJSortedJsonToStdout() {
-        System.out.println(print(departmentJson, true, "id"));
+    public void shouldPrettyPrintSortedJsonToStdout() {
+        System.out.println(print(departmentJson, true));
+    }
+
+    @Test
+    public void shouldPrettyPrintUnsortedJsonToStdout() {
+        System.out.println(print(departmentJson, false));
     }
 
     @Test
