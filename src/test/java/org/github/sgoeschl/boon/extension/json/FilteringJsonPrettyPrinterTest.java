@@ -7,12 +7,12 @@ import java.util.List;
 
 import static io.advantageous.boon.core.Lists.list;
 import static io.advantageous.boon.core.Maps.map;
-import static org.github.sgoeschl.boon.extension.json.ModifyingJsonPrettyPrinter.print;
+import static org.github.sgoeschl.boon.extension.json.FilteringJsonPrettyPrinter.print;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ModifyingJsonPrettyPrinterTest {
+public class FilteringJsonPrettyPrinterTest {
 
     private static final List<?> personJson = list(
             map("id", 2, "salary", 200, "firstName", "John", "lastName", "Smith")
@@ -74,6 +74,21 @@ public class ModifyingJsonPrettyPrinterTest {
             map("name", "Sales", "employees", Collections.EMPTY_LIST),
             map("name", "Marketing", "employees", Collections.EMPTY_LIST)
     );
+
+    @Test
+    public void shouldHandleNullValue() {
+        assertEquals("null", print(null));
+    }
+
+    @Test
+    public void shouldHandleEmptyStringValue() {
+        assertEquals("\"\"", print(""));
+    }
+
+    @Test
+    public void shouldHandleSpaceStringValue() {
+        assertEquals("\" \"", print(" "));
+    }
 
     @Test
     public void shouldPrettyPrintSortedJsonToStdout() {

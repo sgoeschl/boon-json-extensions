@@ -17,9 +17,9 @@ import static java.util.Arrays.asList;
 /**
  * Pretty-print a Boon JSON map while filtering and sorting the entries.
  */
-public final class ModifyingJsonPrettyPrinter {
+public final class FilteringJsonPrettyPrinter {
 
-    private ModifyingJsonPrettyPrinter() {}
+    private FilteringJsonPrettyPrinter() {}
 
     public static String print(Object object, String... skippedKeys) {
         return print(object, false, asList(skippedKeys));
