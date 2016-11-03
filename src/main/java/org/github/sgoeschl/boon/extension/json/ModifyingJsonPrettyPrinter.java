@@ -1,48 +1,59 @@
 package org.github.sgoeschl.boon.extension.json;
 
-import java.util.Arrays;
+import io.advantageous.boon.core.Lists;
+import io.advantageous.boon.core.Predicate;
+import io.advantageous.boon.primitive.CharBuf;
+
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.boon.Lists;
-import org.boon.core.Predicate;
-import org.boon.primitive.CharBuf;
+import static java.util.Arrays.asList;
 
 /**
  * Pretty-print a Boon JSON map while filtering and sorting the entries.
  */
-public class ModifyingJsonPrettyPrinter
-{
-    public static String toString(Object object, String... skippedKeys) {
-        return toString(object, false, Arrays.asList(skippedKeys));
+public final class ModifyingJsonPrettyPrinter {
+
+    private ModifyingJsonPrettyPrinter() {}
+
+    public static String print(Object object, String... skippedKeys) {
+        return print(object, false, asList(skippedKeys));
     }
 
-    public static String toString(Object object, boolean sort, String... skippedKeys) {
-        return toString(object, sort, Arrays.asList(skippedKeys));
+    public static String print(Object object, boolean sort) {
+        return print(object, sort, new String[0]);
     }
 
-    public static String toString(Object object, boolean sort, Collection<String> skippedKeys) {
-        return toString(object, sort, new AcceptKeyPredicate(skippedKeys));
+    public static String print(Object object, boolean sort, String... skippedKeys) {
+        return print(object, sort, asList(skippedKeys));
+    }
+
+    public static String print(Object object, boolean sort, Collection<String> skippedKeys) {
+        return print(object, sort, new AcceptKeyPredicate(skippedKeys));
     }
 
     /**
      * Pretty-print the JSON object.
      *
-     * @param object the JSON to print
-     * @param sort Sort the JSON elements
-     * @param filter Accepr or skip JSON elements based on the key
+     * @param object The JSON object to print
+     * @param sort   Sort the JSON elements alphabetically or keep their natural order
+     * @param filter Accept or skip JSON elements based on the key
      * @return the JSON string
      */
-    public static String toString(Object object, boolean sort, Predicate<String> filter) {
+    private static String print(Object object, boolean sort, Predicate<String> filter) {
         final ModifyingCharBuf modifyingCharBuf = new ModifyingCharBuf(sort, filter);
         return modifyingCharBuf.prettyPrintObject(object, sort, 0).toString();
     }
 
+    /**
+     * Some ugly and intrusive hack using a lot of
+     * internal knowledge to get it working.
+     */
     private static class ModifyingCharBuf extends CharBuf {
 
         private final boolean sort;
@@ -73,7 +84,7 @@ public class ModifyingJsonPrettyPrinter
         private Map createMap(Map<String, Object> map, boolean sort, Predicate<String> predicate) {
 
             final List<String> keys = Lists.filterBy(map.keySet(), predicate);
-            final Map<String, Object> result = (sort ? new TreeMap<String, Object>() : new HashMap<String, Object>());
+            final Map<String, Object> result = (sort ? new TreeMap<String, Object>() : new LinkedHashMap<String, Object>());
 
             for (String key : keys) {
                 result.put(key, map.get(key));
@@ -83,7 +94,7 @@ public class ModifyingJsonPrettyPrinter
         }
     }
 
-    private static class AcceptKeyPredicate implements Predicate<String> {
+    private static final class AcceptKeyPredicate implements Predicate<String> {
 
         private final Set<String> skippedKeys;
 
